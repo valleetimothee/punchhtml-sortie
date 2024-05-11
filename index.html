@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>  
+  
+  <script src="https://kit.fontawesome.com/58f591c068.js" crossorigin="anonymous"></script> 
+
+<style>
+  
+body {
+  background-color: white;
+  max-width: 800px;
+  margin: auto;
+}   
+  
+.form {
+  font-family: Helvetica;
+  margin: auto;
+  text-align: center;
+  background-color: white;
+}  
+  
+  .header {
+  }
+  
+    .header-logo {
+    }
+  
+      #header-logo-img {
+        margin-top: 40px;
+        margin-bottom: 50px;
+        width: 40%;
+      }
+  
+    .header-title {
+      color: #022e37;
+    }
+      
+      .header-title-text {
+        margin-bottom: 10px;
+        font-size: 72px;
+        font-weight: bold;
+        text-transform: uppercase;
+      }
+  
+      .header-title-type {
+        font-size: 42px;
+      }
+  
+  .employee {
+    margin-top: 20px;
+    margin-bottom: 20px;
+  }
+  
+    .employee-name {
+      color: #022e37;
+      font-size: 30px;
+      margin-top: 75px;
+    }
+  
+    .employee-input {
+      margin-top: 10px;
+    }
+  
+      #inp1 {
+        width: 80%;
+        height: 100px;
+        text-align: center;
+        font-size: 30px;
+        border-radius: 25px;
+        border: 0px;
+        background-color: #efefef;
+      }
+  
+    .employee-button {
+      margin-top: 75px;
+      margin-bottom: 25px;
+    }
+  
+      .button {
+        width: 85%;
+        height: 80px;
+        font-size: 20px;
+        border-radius: 20px;
+        border: 0px;
+        margin-bottom: 25px;
+        background-color: #30c1db;
+        color: white;
+        text-transform: uppercase;
+        cursor: pointer;
+        transition-duration: 50ms;
+      }
+  
+      .button:active {
+        background-color: #022e37;
+        font-size: 12px;
+      }
+  
+.confirmation {
+  font-family: Helvetica;
+  margin: auto;
+  text-align: center;
+  background-color: white;
+}   
+  
+  .confirmation-icon {
+  }
+  
+    #confirmation-icon-img {
+      width: 15%;
+      margin-top: 60px;
+      margin-bottom: 20px;
+    }
+  
+  .confirmation-message {
+    font-size: 48px;
+    color: #022e37;
+  }
+  
+  .confirmation-reload {
+    margin-top: 45px;
+  }
+  
+    .confirmation-button {
+      width: 75%;
+      height: 60px;
+      color: #022e37;
+      border: 0px;
+      border-radius: 15px;
+      font-size: 18px;
+      cursor: pointer;
+      transition-duration: 50ms;
+    }
+  
+    .confirmation-button:active {
+      background-color: #022e37;
+      font-size: 12px;
+      color: white;
+    }
+  
+</style>
+
+</head>
+
+<body>  
+  
+<form class="form" method="post" id="form" action="https://docs.google.com/forms/u/0/d/e/1FAIpQLSfDM5oI-wNceDKq-Nf-pMzu6UsJN_ATF6q7lLw-4G1khN00WQ/formResponse">
+    
+  <div class="header">
+   
+    <div class="header-title">
+      
+      <div class="header-title-text">
+        Punch <i class="fa-regular fa-clock"></i>
+      </div>
+      
+      <div class="header-title-type">
+       Fin de journée
+      </div>
+      
+    </div>
+  </div>
+  
+  <div class="employee">
+    
+    <div class="employee-name">
+      Nom du travailleur
+    </div>
+    
+    <div class="employee-input">
+      <select id="inp1" name="entry.676792740">
+          <option disabled selected value> Sélectionner... </option>
+          <option value="Charles Patry">Charles Patry</option>
+          <option value="Philippe Laneville">Philippe Laneville</option>
+          <option value="Simon Corbeil">Simon Corbeil</option>
+          <option value="Thomas Desrosiers">Thomas Desrosiers</option>
+          <option value="Thomas Drouin">Thomas Drouin</option>
+          <option value="Timothée Vallée">Timothée Vallée</option>
+      </select>
+    </div>
+  
+    <div class="employee-button">
+      <input class="button" type="submit" value="Terminer la journée" onclick="afficherConfirmation();">
+    </div>
+
+  </div>  
+
+</form>
+
+<div class="confirmation" id="confirmation" style="display: none;">
+  <div class="confirmation-icon">
+    <img id="confirmation-icon-img" src="https://i.imgur.com/QvcsG6s.png">
+  </div>
+  <div class="confirmation-message">Heure de sortie enregistrée</div>
+  <div class="confirmation-reload"><button class="confirmation-button" onclick="afficherFormulaire()">Faire une nouvelle entrée</button></div>
+</div>  
+  
+<script>
+  
+  let url = "https://docs.google.com/forms/u/0/d/e/1FAIpQLSfDM5oI-wNceDKq-Nf-pMzu6UsJN_ATF6q7lLw-4G1khN00WQ/formResponse"; //action url
+  let form = document.querySelector("#form"); //form element
+
+  form.addEventListener("submit", (e)=>{
+      e.preventDefault();//prevent default behaviour
+
+      fetch(url,{
+          method: "POST",
+          mode: "no-cors",
+          header:{
+              'Content-Type': 'application/json'
+              },
+          body: getInputData()
+      })
+      .then(data=>{
+          console.log(data);
+      })
+      .catch(err=>console.error(err)); //promise based
+  });
+
+  //populating input data
+  function getInputData(){
+      let dataToPost = new FormData(); //formdata API
+
+      //fill name attributes to corresponding values
+      dataToPost.append("entry.676792740", document.querySelector("#inp1").value);
+
+      return dataToPost;
+  }
+  
+  function afficherFormulaire() {
+    // Masquer la section du message de confirmation et afficher à nouveau la section du formulaire
+    document.getElementById("confirmation").style.display = "none";
+    document.getElementById("form").style.display = "block";
+  }  
+  
+  function afficherConfirmation() {
+    // Masquer la section du message de confirmation et afficher à nouveau la section du formulaire
+    document.getElementById("confirmation").style.display = "block";
+    document.getElementById("form").style.display = "none";
+  }  
+  
+</script>
+  
+</body>  
+  
+</html>  
